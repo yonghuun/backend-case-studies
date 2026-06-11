@@ -247,26 +247,6 @@ attractionWhere
 
 ![스크린샷 2026-06-11 오후 2.55.08.png](./images/mapper-after.png)
 
-추천 캡처 범위:
-
-```xml
-<sql id="attractionSearchFrom">
-    FROM attractions a
-    LEFT JOIN ...
-    <include refid="attractionWhere" />
-</sql>
-
-<sql id="attractionCountFrom">
-    FROM attractions a
-    <include refid="attractionWhere" />
-</sql>
-
-<select id="count" resultType="long">
-    SELECT COUNT(*)
-    <include refid="attractionCountFrom" />
-</select>
-```
-
 ## 9. 개선 후 API 응답 시간
 
 동일한 조건으로 다시 API 응답 시간을 측정했다.
