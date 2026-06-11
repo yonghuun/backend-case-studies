@@ -57,7 +57,7 @@ GET /api/attractions?contentTypeIds=12&page=1&size=6
 
 [이미지: 개선 전 Docker 로그 캡처]
 
-![image.png](./images/image.png)
+![image.png](./images/before-api-log.png)
 
 ## 4. 1차 분석
 
@@ -80,7 +80,7 @@ FROM attractions;
 
 [이미지: attractions 데이터 수 캡처]
 
-![image.png](./images/image%201.png)
+![image.png](./images/attraction-count.png)
 
 ### 5-2. JOIN 포함 COUNT 측정
 
@@ -97,7 +97,7 @@ LEFT JOIN contenttypes ct ON a.content_type_id = ct.content_type_id;
 
 [이미지: JOIN 포함 COUNT 실행 시간 캡처]
 
-![image.png](./images/image%202.png)
+![image.png](./images/join-count.png)
 
 ### 5-3. attractions 단독 COUNT 측정
 
@@ -108,7 +108,7 @@ FROM attractions a;
 
 [이미지: attractions 단독 COUNT 실행 시간 캡처]
 
-![image.png](./images/image%203.png)
+![image.png](./images/simple-count.png)
 
 ### 5-4. 목록 조회 쿼리 측정
 
@@ -132,7 +132,7 @@ LIMIT 6 OFFSET 0;
 
 [이미지: 목록 6개 조회 실행 시간 캡처]
 
-![image.png](./images/image%204.png)
+![image.png](./images/list-query.png)
 
 목록 조회는 JOIN을 포함하더라도 `LIMIT 6`으로 6개 row만 조회하기 때문에 빠르게 수행되었다.
 
@@ -157,7 +157,7 @@ LIMIT 6 OFFSET 0;
 
 [이미지: 목록 조회 EXPLAIN 캡처]
 
-![image.png](./images/image%205.png)
+![image.png](./images/explain-list-query.png)
 
 실행 계획상 `attractions` 테이블은 `PRIMARY` 인덱스를 사용했고, `ORDER BY no DESC LIMIT 6`은 역방향 인덱스 스캔으로 처리되었다. 따라서 목록 조회 자체는 효율적으로 수행되고 있음을 확인했다.
 
@@ -243,9 +243,9 @@ attractionWhere
 
 [이미지: 수정한 AttractionMapper.xml 코드 캡처]
 
-![스크린샷 2026-06-11 오후 2.54.57.png](./images/%E1%84%89%E1%85%B3%E1%84%8F%E1%85%B3%E1%84%85%E1%85%B5%E1%86%AB%E1%84%89%E1%85%A3%E1%86%BA_2026-06-11_%E1%84%8B%E1%85%A9%E1%84%92%E1%85%AE_2.54.57.png)
+![스크린샷 2026-06-11 오후 2.54.57.png](./images/mapper-before.png)
 
-![스크린샷 2026-06-11 오후 2.55.08.png](./images/%E1%84%89%E1%85%B3%E1%84%8F%E1%85%B3%E1%84%85%E1%85%B5%E1%86%AB%E1%84%89%E1%85%A3%E1%86%BA_2026-06-11_%E1%84%8B%E1%85%A9%E1%84%92%E1%85%AE_2.55.08.png)
+![스크린샷 2026-06-11 오후 2.55.08.png](./images/mapper-after.png)
 
 추천 캡처 범위:
 
@@ -291,7 +291,7 @@ GET /api/attractions?contentTypeIds=12&page=1&size=6
 
 [이미지: 개선 후 Docker 로그 캡처]
 
-![스크린샷 2026-06-11 오후 2.50.00.png](./images/%E1%84%89%E1%85%B3%E1%84%8F%E1%85%B3%E1%84%85%E1%85%B5%E1%86%AB%E1%84%89%E1%85%A3%E1%86%BA_2026-06-11_%E1%84%8B%E1%85%A9%E1%84%92%E1%85%AE_2.50.00.png)
+![스크린샷 2026-06-11 오후 2.50.00.png](./images/after-api-log.png)
 
 ## 10. 개선 전후 비교
 
@@ -339,9 +339,9 @@ GET /api/attractions?keyword=서울&page=1&size=6
 
 [이미지: 키워드 검색 Docker 로그 캡처]
 
-![스크린샷 2026-06-11 오후 3.49.55.png](./images/%E1%84%89%E1%85%B3%E1%84%8F%E1%85%B3%E1%84%85%E1%85%B5%E1%86%AB%E1%84%89%E1%85%A3%E1%86%BA_2026-06-11_%E1%84%8B%E1%85%A9%E1%84%92%E1%85%AE_3.49.55.png)
+![스크린샷 2026-06-11 오후 3.49.55.png](./images/keyword-log-1.png)
 
-![스크린샷 2026-06-11 오후 3.49.40.png](./images/%E1%84%89%E1%85%B3%E1%84%8F%E1%85%B3%E1%84%85%E1%85%B5%E1%86%AB%E1%84%89%E1%85%A3%E1%86%BA_2026-06-11_%E1%84%8B%E1%85%A9%E1%84%92%E1%85%AE_3.49.40.png)
+![스크린샷 2026-06-11 오후 3.49.40.png](./images/keyword-log-2.png)
 
 키워드 검색은 다음 조건으로 수행된다.
 
@@ -407,7 +407,7 @@ keyword=제주
 
 [이미지: 키워드 검색 직후 초기화 지연 로그 캡처]
 
-![image.png](./images/image%206.png)
+![image.png](./images/keyword-reset-delay.png)
 
 이를 통해 초기화 쿼리 자체가 항상 느린 것이 아니라, 무거운 키워드 검색 요청 이후 전체조회 요청이 함께 지연되는 패턴을 확인했다.
 
