@@ -5,3 +5,4 @@
 ## TripCrew
 
 - [관광지 조회 API 성능 분석 및 개선](./tripcrew/attraction-query-optimization.md)
+- [관광지 키워드 검색 성능 분석](./attraction-search-performance.md)
