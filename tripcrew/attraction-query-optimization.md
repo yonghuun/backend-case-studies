@@ -57,7 +57,7 @@ GET /api/attractions?contentTypeIds=12&page=1&size=6
 
 [이미지: 개선 전 Docker 로그 캡처]
 
-![image.png](./images/before-api-log.png)
+![image.png](./attraction-query-optimization-images/before-api-log.png)
 
 ## 4. 1차 분석
 
@@ -80,7 +80,7 @@ FROM attractions;
 
 [이미지: attractions 데이터 수 캡처]
 
-![image.png](./images/attraction-count.png)
+![image.png](./attraction-query-optimization-images/attraction-count.png)
 
 ### 5-2. JOIN 포함 COUNT 측정
 
@@ -97,7 +97,7 @@ LEFT JOIN contenttypes ct ON a.content_type_id = ct.content_type_id;
 
 [이미지: JOIN 포함 COUNT 실행 시간 캡처]
 
-![image.png](./images/join-count.png)
+![image.png](./attraction-query-optimization-images/join-count.png)
 
 ### 5-3. attractions 단독 COUNT 측정
 
@@ -108,7 +108,7 @@ FROM attractions a;
 
 [이미지: attractions 단독 COUNT 실행 시간 캡처]
 
-![image.png](./images/simple-count.png)
+![image.png](./attraction-query-optimization-images/simple-count.png)
 
 ### 5-4. 목록 조회 쿼리 측정
 
@@ -132,7 +132,7 @@ LIMIT 6 OFFSET 0;
 
 [이미지: 목록 6개 조회 실행 시간 캡처]
 
-![image.png](./images/list-query.png)
+![image.png](./attraction-query-optimization-images/list-query.png)
 
 목록 조회는 JOIN을 포함하더라도 `LIMIT 6`으로 6개 row만 조회하기 때문에 빠르게 수행되었다.
 
@@ -157,7 +157,7 @@ LIMIT 6 OFFSET 0;
 
 [이미지: 목록 조회 EXPLAIN 캡처]
 
-![image.png](./images/explain-list-query.png)
+![image.png](./attraction-query-optimization-images/explain-list-query.png)
 
 실행 계획상 `attractions` 테이블은 `PRIMARY` 인덱스를 사용했고, `ORDER BY no DESC LIMIT 6`은 역방향 인덱스 스캔으로 처리되었다. 따라서 목록 조회 자체는 효율적으로 수행되고 있음을 확인했다.
 
@@ -243,9 +243,9 @@ attractionWhere
 
 [이미지: 수정한 AttractionMapper.xml 코드 캡처]
 
-![스크린샷 2026-06-11 오후 2.54.57.png](./images/mapper-before.png)
+![스크린샷 2026-06-11 오후 2.54.57.png](./attraction-query-optimization-images/mapper-before.png)
 
-![스크린샷 2026-06-11 오후 2.55.08.png](./images/mapper-after.png)
+![스크린샷 2026-06-11 오후 2.55.08.png](./attraction-query-optimization-images/mapper-after.png)
 
 ## 9. 개선 후 API 응답 시간
 
@@ -271,7 +271,7 @@ GET /api/attractions?contentTypeIds=12&page=1&size=6
 
 [이미지: 개선 후 Docker 로그 캡처]
 
-![스크린샷 2026-06-11 오후 2.50.00.png](./images/after-api-log.png)
+![스크린샷 2026-06-11 오후 2.50.00.png](./attraction-query-optimization-images/after-api-log.png)
 
 ## 10. 개선 전후 비교
 
